@@ -7,12 +7,16 @@
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "HealthComponent.h"
 #include "HoeRootCharacter.generated.h"
 
 UCLASS()
 class NEULAND_API AHoeRootCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+private:
+	class UHealthComponent* HealthComponent;
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "CharacterMovement")
@@ -41,11 +45,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		class UCameraComponent* CameraComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "hdb", meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* FollowCamera;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		class USpringArmComponent* SpringArmComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "hdb", meta = (AllowPrivateAccess = "true"))
+		class USpringArmComponent* CameraBoom;
 
 public:
 	// Called every frame

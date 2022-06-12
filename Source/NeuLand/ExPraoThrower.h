@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "TimerManager.h"
+#include "Math/UnrealMathUtility.h"
 #include "ExPraoThrower.generated.h"
 
 UCLASS()
@@ -18,6 +20,22 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	// can see player ?
+	bool bCanSeePlayer = false;
+	// could see player at last frame ?
+	bool bPreviousCanSeePlayer = false;
+
+	FTimerHandle ThrowTimerHandle;
+	float ThrowingInterval = FMath::RandRange(1.0f, 2.0f);
+	float ThrowingDelay = FMath::RandRange(0.f, 1.5f);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Look At", meta = (AllowPrivateAccess = "true"))
+		class USceneComponent* SightSource;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Look At", meta = (AllowPrivateAccess = "true"))
+		class USceneComponent* ThrowSource;
+
+	FRotator ThrowRotation;
 
 public:
 	// Called every frame
@@ -27,8 +45,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Changes the character's rotation to look at passed actor
-	void LookAtActor(AActor* TargetActor);
+	bool LookAtActor(AActor* TargetActor);
 
 	// Check if can see the passed actor
 	bool CanSeeActor(const AActor* TargetActor) const;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "StoneProjectile")
+		TSubclassOf<class AStoneProjectile> StoneClass;
+
+
+	UFUNCTION()
+		void ThrowStone();
 };

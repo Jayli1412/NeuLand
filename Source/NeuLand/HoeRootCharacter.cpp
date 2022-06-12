@@ -18,21 +18,28 @@ AHoeRootCharacter::AHoeRootCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Instantiating class components
-	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
-	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 
 	//Attaching springarm component to the default character's skeletal mesh component
-	SpringArmComp->SetupAttachment(Cast<USceneComponent>(GetCapsuleComponent()));
+	CameraBoom->SetupAttachment(Cast<USceneComponent>(GetCapsuleComponent()));
 
 	// Attaching camera component to the springarm component
-	CameraComp->AttachToComponent(SpringArmComp, FAttachmentTransformRules::KeepRelativeTransform);
+	// CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
+	// CameraComp->AttachToComponent(SpringArmComp, FAttachmentTransformRules::KeepRelativeTransform);
 
 	// Setting default properties of the SpringArmComp
-	SpringArmComp->bUsePawnControlRotation = true;
-	SpringArmComp->bEnableCameraLag = true;
-	SpringArmComp->TargetArmLength = 300.f;
+	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->TargetArmLength = 300.f;
 
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	FollowCamera->bUsePawnControlRotation = false;
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 }
 
 // Called when the game starts or when spawned
@@ -121,8 +128,8 @@ void AHoeRootCharacter::CameraZoomIn()
 {
 	if (Controller)
 	{
-		float PreviousLength = SpringArmComp->TargetArmLength;
-		SpringArmComp->TargetArmLength = UKismetMathLibrary::FClamp((-1.f * ZoomSensitivity) + PreviousLength, ZoomMin, ZoomMax);
+		float PreviousLength = CameraBoom->TargetArmLength;
+		CameraBoom->TargetArmLength = UKismetMathLibrary::FClamp((-1.f * ZoomSensitivity) + PreviousLength, ZoomMin, ZoomMax);
 	}
 
 }
@@ -131,8 +138,8 @@ void AHoeRootCharacter::CameraZoomOut()
 {
 	if (Controller)
 	{
-		float PreviousLength = SpringArmComp->TargetArmLength;
-		SpringArmComp->TargetArmLength = UKismetMathLibrary::FClamp((1.f * ZoomSensitivity) + PreviousLength, ZoomMin, ZoomMax);
+		float PreviousLength = CameraBoom->TargetArmLength;
+		CameraBoom->TargetArmLength = UKismetMathLibrary::FClamp((1.f * ZoomSensitivity) + PreviousLength, ZoomMin, ZoomMax);
 	}
 
 }
