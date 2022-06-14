@@ -8,10 +8,11 @@
 #include "Components/ArrowComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HealthComponent.h"
+#include "HealthInterface.h"
 #include "HoeRootCharacter.generated.h"
 
 UCLASS()
-class NEULAND_API AHoeRootCharacter : public ACharacter
+class NEULAND_API AHoeRootCharacter : public ACharacter, public IHealthInterface
 {
 	GENERATED_BODY()
 
@@ -54,6 +55,9 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void OnDeath_Implementation() override;
+	virtual void OnTakeDamage_Implementation() override;
 
 protected:
 	// Called to bind functionality to input

@@ -15,8 +15,8 @@ AExPraoThrower::AExPraoThrower()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SightSource = CreateDefaultSubobject<USceneComponent>(TEXT("Sight Source"));
-	SightSource->SetupAttachment(RootComponent);
+	LookAtActorComponent = CreateDefaultSubobject<ULookAtActorComponent>(TEXT("Look At Actor Component"));
+	LookAtActorComponent->SetupAttachment(RootComponent);
 
 	ThrowSource = CreateDefaultSubobject<USceneComponent>(TEXT("Throw Source"));
 	ThrowSource->SetupAttachment(RootComponent);
@@ -27,6 +27,10 @@ AExPraoThrower::AExPraoThrower()
 void AExPraoThrower::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+	LookAtActorComponent->SetTarget(PlayerCharacter);
+
 }
 
 // Called every frame
@@ -34,17 +38,21 @@ void AExPraoThrower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
+	bCanSeePlayer = LookAtActorComponent->CanSeeTarget();
 
-	bCanSeePlayer = LookAtActor(PlayerCharacter);
+	ThrowRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), UGameplayStatics::GetPlayerCharacter(this, 0)->GetActorLocation());
 
 	if (bCanSeePlayer != bPreviousCanSeePlayer)
 	{
 		if (bCanSeePlayer)
 		{
-			if (UKismetMathLibrary::Abs((PlayerCharacter->GetActorLocation() - GetActorLocation()).Size()) < 1000.f)
+			if (UKismetMathLibrary::Abs((GetActorLocation() - UGameplayStatics::GetPlayerCharacter(this, 0)->GetActorLocation()).Size()) < 1000.f)
 			{
 				GetWorldTimerManager().SetTimer(ThrowTimerHandle, this, &AExPraoThrower::ThrowStone, ThrowingInterval, true, ThrowingDelay);
+			}
+			else
+			{
+				GetWorldTimerManager().ClearTimer(ThrowTimerHandle);
 			}
 		}
 		else
@@ -52,7 +60,7 @@ void AExPraoThrower::Tick(float DeltaTime)
 			GetWorldTimerManager().ClearTimer(ThrowTimerHandle);
 		}
 	}
-	bPreviousCanSeePlayer = LookAtActor(PlayerCharacter);
+	bPreviousCanSeePlayer = LookAtActorComponent->CanSeeTarget();
 
 }
 
@@ -74,7 +82,7 @@ bool AExPraoThrower::CanSeeActor(const AActor* TargetActor) const
 	FHitResult Hit;
 
 	// The position of line trace's start, end
-	FVector Start = SightSource->GetComponentLocation();
+	FVector Start = LookAtActorComponent->GetComponentLocation();
 	FVector End = TargetActor->GetActorLocation();
 
 	FQuat Rotation = FQuat::Identity;
@@ -95,28 +103,6 @@ bool AExPraoThrower::CanSeeActor(const AActor* TargetActor) const
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 
 	return !Hit.bBlockingHit;
-}
-
-bool AExPraoThrower::LookAtActor(AActor* TargetActor)
-{
-	if (TargetActor == nullptr)
-		return false;
-
-	const TArray<const AActor*> IgnoreActors = { this, TargetActor };
-	if (UNeuLandFunctionLibrary::CanSeeActor(GetWorld(), SightSource->GetComponentLocation(), TargetActor, IgnoreActors))
-	{
-		FVector Start = GetActorLocation();
-		FVector End = TargetActor->GetActorLocation();
-		ThrowRotation = UKismetMathLibrary::FindLookAtRotation(Start, End);
-		float TempX, TempY, Yaw = 0;
-		UKismetMathLibrary::BreakRotator(ThrowRotation, TempX, TempY, Yaw);
-		FRotator LookAtRotation = UKismetMathLibrary::MakeRotator(0.f, 0.f, Yaw);
-
-		SetActorRotation(LookAtRotation);
-		// SetActorRotation(TempRotation);
-		return true;
-	}
-	return false;
 }
 
 void AExPraoThrower::ThrowStone()

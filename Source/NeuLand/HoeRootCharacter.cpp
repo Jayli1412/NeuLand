@@ -2,14 +2,17 @@
 
 
 #include "HoeRootCharacter.h"
-#include "Components/InputComponent.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "GameFramework/Controller.h"
+
 #include "Camera/CameraComponent.h"
+#include "Components/InputComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/Controller.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "NeuLandPlayerController.h"
 
 // Sets default values
 AHoeRootCharacter::AHoeRootCharacter()
@@ -153,4 +156,18 @@ void AHoeRootCharacter::Sprint()
 {
 
 	GetCharacterMovement()->MaxWalkSpeed = SprintWalkSpeed * SpeedMultiplier;
+}
+
+void AHoeRootCharacter::OnDeath_Implementation()
+{
+	UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit, true);
+}
+
+void AHoeRootCharacter::OnTakeDamage_Implementation()
+{
+	ANeuLandPlayerController* PlayerController = Cast<ANeuLandPlayerController>(GetController());
+	if (PlayerController != nullptr)
+	{
+		PlayerController->UpdateHealthPercent(HealthComponent->GetHealthPercent());
+	}
 }
