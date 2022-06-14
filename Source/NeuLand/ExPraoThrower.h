@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "TimerManager.h"
+#include "LookAtActorComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "TimerManager.h"
+
 #include "ExPraoThrower.generated.h"
 
 UCLASS()
@@ -30,7 +32,7 @@ protected:
 	float ThrowingDelay = FMath::RandRange(0.f, 1.5f);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Look At", meta = (AllowPrivateAccess = "true"))
-		class USceneComponent* SightSource;
+		class ULookAtActorComponent* LookAtActorComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Look At", meta = (AllowPrivateAccess = "true"))
 		class USceneComponent* ThrowSource;
@@ -44,8 +46,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Changes the character's rotation to look at passed actor
-	bool LookAtActor(AActor* TargetActor);
 
 	// Check if can see the passed actor
 	bool CanSeeActor(const AActor* TargetActor) const;

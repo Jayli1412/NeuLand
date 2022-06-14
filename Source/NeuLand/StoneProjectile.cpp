@@ -15,7 +15,7 @@ AStoneProjectile::AStoneProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
-	SphereComponent->SetSphereRadius(10.f);
+	SphereComponent->SetSphereRadius(20.f);
 	SphereComponent->SetCollisionProfileName(FName("StoneProjectile"));
 	SphereComponent->SetSimulatePhysics(true);
 
@@ -59,7 +59,7 @@ void AStoneProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 			float ForceMultiplier = 0.1f;
 			FVector LaunchForce = FVector(X, Y, 100.f / ForceMultiplier) * KnockBackAmount * ForceMultiplier;
 			Player->LaunchCharacter(LaunchForce, true, true);
-			// HealthComponent->LoseHealth(Damage);
+			HealthComponent->LoseHealth(Damage);
 		}
 		Destroy();
 	}

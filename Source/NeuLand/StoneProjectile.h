@@ -28,7 +28,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = "Damage")
-		float Damage = 34.f;
+		float Damage = 10.f;
 
 	UPROPERTY(EditAnywhere, Category = "Damage")
 		float KnockBackAmount = 1.f;
