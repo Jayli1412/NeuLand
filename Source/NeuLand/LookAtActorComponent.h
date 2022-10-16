@@ -27,6 +27,8 @@ protected:
 	// Whether the enemy can currently see the target
 	bool bCanSeeTarget = false;
 
+	class USceneComponent* ThrowSource;
+
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

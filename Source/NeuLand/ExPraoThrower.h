@@ -34,14 +34,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Look At", meta = (AllowPrivateAccess = "true"))
 		class ULookAtActorComponent* LookAtActorComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Look At", meta = (AllowPrivateAccess = "true"))
-		class USceneComponent* ThrowSource;
 
 	FRotator ThrowRotation;
 
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Look At", meta = (AllowPrivateAccess = "true"))
+		class USceneComponent* ThrowSource;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
