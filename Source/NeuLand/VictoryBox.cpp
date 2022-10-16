@@ -2,7 +2,7 @@
 
 
 #include "VictoryBox.h"
-#include "HoeRootCharacter.h"
+// #include "HoeRootCharacter.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
@@ -41,8 +41,8 @@ void AVictoryBox::Tick(float DeltaTime)
 
 void AVictoryBox::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (Cast<AHoeRootCharacter>(OtherActor))
-	{
-		UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, true);
-	}
+	// if (Cast<AHoeRootCharacter>(OtherActor))
+	// {
+	// 	UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, true);
+	// }
 }

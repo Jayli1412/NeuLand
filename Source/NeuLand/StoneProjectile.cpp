@@ -3,7 +3,7 @@
 
 #include "StoneProjectile.h"
 #include "Components/SphereComponent.h"
-#include "HoeRootCharacter.h"
+// #include "HoeRootCharacter.h"
 #include "HealthComponent.h"
 #include "Math/Vector.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -46,21 +46,21 @@ void AStoneProjectile::Tick(float DeltaTime)
 
 void AStoneProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	AHoeRootCharacter* Player = Cast<AHoeRootCharacter>(OtherActor);
-	if (Player != nullptr)
-	{
-		UHealthComponent* HealthComponent = Player->FindComponentByClass<UHealthComponent>();
-		if (HealthComponent != nullptr)
-		{
-			float X, Y, Z = 0.f;
-			UKismetMathLibrary::BreakVector(GetVelocity(), X, Y, Z);
-			UKismetMathLibrary::FClamp(X, -1.f, 1.f);
-			UKismetMathLibrary::FClamp(Y, -1.f, 1.f);
-			float ForceMultiplier = 0.1f;
-			FVector LaunchForce = FVector(X, Y, 100.f / ForceMultiplier) * KnockBackAmount * ForceMultiplier;
-			Player->LaunchCharacter(LaunchForce, true, true);
-			HealthComponent->LoseHealth(Damage);
-		}
-		Destroy();
-	}
+	// AHoeRootCharacter* Player = Cast<AHoeRootCharacter>(OtherActor);
+	// if (Player != nullptr)
+	// {
+	// 	UHealthComponent* HealthComponent = Player->FindComponentByClass<UHealthComponent>();
+	// 	if (HealthComponent != nullptr)
+	// 	{
+	// 		float X, Y, Z = 0.f;
+	// 		UKismetMathLibrary::BreakVector(GetVelocity(), X, Y, Z);
+	// 		UKismetMathLibrary::FClamp(X, -1.f, 1.f);
+	// 		UKismetMathLibrary::FClamp(Y, -1.f, 1.f);
+	// 		float ForceMultiplier = 0.1f;
+	// 		FVector LaunchForce = FVector(X, Y, 100.f / ForceMultiplier) * KnockBackAmount * ForceMultiplier;
+	// 		Player->LaunchCharacter(LaunchForce, true, true);
+	// 		HealthComponent->LoseHealth(Damage);
+	// 	}
+	// 	Destroy();
+	// }
 }

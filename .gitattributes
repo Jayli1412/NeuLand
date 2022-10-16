@@ -10,3 +10,5 @@ Plugins/SRombauts-UE4GitPlugin-2.17-beta-2-g1a3f369/SRombauts-UE4GitPlugin-1a3f3
 Vids/* filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.prproj filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+Packaging/* filter=lfs diff=lfs merge=lfs -text
